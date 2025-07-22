@@ -2,40 +2,62 @@
 #define TEKU_H
 
 #include <vector>
+#include <string>
+#include <iostream>
+#include <fstream>
 
-using Image = vector<vector<float>>;           // the type of variable like int represents a single integer similarl it represents a 2D matrix i.e. 28x28 image
-using ImageSet = vector<Image>;                // Set of images
+// Type aliases
+typedef std::vector<std::vector<float>> Image;
+typedef std::vector<Image> ImageSet;
 
+struct ForwardResult;
+// Forward pass result struct
+struct ForwardResult {
+    std::vector<float> probabilities;
+    std::vector<float> flattened_input;
+};
+
+ForwardResult forward_pass(
+    const std::vector<std::vector<float>>& image,
+    const ImageSet& filters,
+    const std::vector<std::vector<float>>& fc_weights,
+    const std::vector<float>& fc_biases
+);
+struct LabeledDataset {
+    ImageSet images;
+    std::vector<int> labels;
+};
+// Data loading
+LabeledDataset load_labeled_images_from_csv(const std::string& filename);
+
+// CNN operations
 Image convolve(const Image& image, const Image& filter);
 Image relu(const Image& image);
 Image maxpool(const Image& image, int pool_size);
 std::vector<float> flatten(const Image& image);
 
-
-
+// Fully connected layer
 std::vector<float> fully_connected(const std::vector<float>& input,
                                    const std::vector<std::vector<float>>& weights,
                                    const std::vector<float>& biases);
 
-
-
-std::vector<std::vector<float>> forward_pass(
-    const ImageSet& images,
-    const ImageSet& filters,
-    const std::vector<std::vector<float>>& fc_weights,
-    const std::vector<float>& fc_biases
-)
-
+// Softmax
 std::vector<float> softmax(const std::vector<float>& logits);
 
-std::vector<float> softmax_grad(const std::vector<float>& probs, int label);
+// Loss
+float cross_entropy(const std::vector<float>& probs, int label);
 
-ImageSet load_images_from_csv(const std::string& filename);
+// Backpropagation
+void backward_pass_fc(
+    const std::vector<float>& flat_input,
+    const std::vector<float>& probs,
+    int label,
+    std::vector<std::vector<float>>& fc_weights,
+    std::vector<float>& fc_biases,
+    float learning_rate
+);
 
-void fc_backward(const std::vector<float>& input,
-                 const std::vector<float>& grad_output,  // dL/dz
-                 std::vector<std::vector<float>>& weights,
-                 std::vector<float>& biases,
-                 float learning_rate);
+// Utility
+int argmax(const std::vector<float>& vec);
 
-#endif
+#endif // TEKU_H
