@@ -18,7 +18,6 @@ It demonstrates the core principles of convolution, activation functions, poolin
 - Accuracy and loss tracking per epoch
 
 ## 📂 Project Structure
-## Project Structure
 - `main.cpp` — main CNN training loop
 - `functions.h` — helper functions for convolution, pooling, etc.
 - `mnist_train.csv` — dataset file (download separately)
