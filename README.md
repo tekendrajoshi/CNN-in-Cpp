@@ -19,7 +19,7 @@ It demonstrates the core principles of convolution, activation functions, poolin
 
 ## 📂 Project Structure
 - `main.cpp` — main CNN training loop
-- `functions.h` — helper functions for convolution, pooling, etc.
+- `functions.cpp` — helper functions for convolution, pooling, etc.
 - `mnist_train.csv` — dataset file (download separately)
 
 ## 📊 Example Output
